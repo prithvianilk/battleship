@@ -4,13 +4,20 @@
 (def OUTCOME-HIT "HIT")
 (def OUTCOME-MISS "MISS")
 
+(defn nth-and-mth
+      ([s n m]
+       (nth (nth n s) m))
+
+      ([s pos]
+       (nth (nth s (pos 0)) (pos 1)))
+      )
+
 (defn get-attacked-entities [game player-id move]
       (let [
             attacked-player's-id (if (= player-id PLAYER-1) PLAYER-2 PLAYER-1)
             attacked-player (get-player game attacked-player's-id)
             attacked-player's-board (get-player's-board game attacked-player's-id)
-            attacked-piece (nth (nth attacked-player's-board (get move 0)) (get move 1))
-            ]
+            attacked-piece (nth-and-mth attacked-player's-board move)]
         [attacked-player's-id attacked-player attacked-player's-board attacked-piece]
         )
       )
@@ -25,8 +32,7 @@
             (get-attacked-entities game player-id move)
 
             updated-row (assoc (vec (nth attacked-player's-board (move 0))) (move 1) new-piece)
-            updated-board (assoc (vec attacked-player's-board) (move 0) updated-row)
-            ]
+            updated-board (assoc (vec attacked-player's-board) (move 0) updated-row)]
         (assoc game (keyword attacked-player's-id) (assoc attacked-player :board updated-board))
         )
       )

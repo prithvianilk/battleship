@@ -9,10 +9,12 @@
 (def PIECE-MISSED-SHIP "❌")
 
 (defn get-board-size [game] ((game :config) :board-size))
+(defn get-ships-per-player [game] ((game :config) :ships-per-player))
 (defn get-player [game player-id] (game (keyword player-id)))
 (defn get-player's-name [game player-id] ((game (keyword player-id)) :name))
 (defn get-player's-ships [game player-id] ((game (keyword player-id)) :ships))
 (defn get-player's-board [game player-id] ((game (keyword player-id)) :board))
+(defn player-exists? [game player-id] (not (nil? (game (keyword player-id)))))
 
 (defn create-board-row
       [row-index board-column-count ships]
@@ -36,14 +38,20 @@
 
 (defn create-player [name ships] {:name name :ships ships})
 
+(defn add-player [game player-id player]
+      (assoc game (keyword player-id)
+                  (assoc player :board (create-board ((game :config) :board-size) (player :ships))))
+      )
+
 (defn create-game
-      [config player-1 player-2]
-      {
-       :id                (rand-int 10)
-       :config            config
-       (keyword PLAYER-1) (assoc player-1 :board (create-board (config :board-size) (player-1 :ships)))
-       (keyword PLAYER-2) (assoc player-2 :board (create-board (config :board-size) (player-2 :ships)))
-       }
+      ([config]
+       {:id (rand-int 10) :config config})
+
+      ([config player-1 player-2]
+       {:id                (rand-int 10)
+        :config            config
+        (keyword PLAYER-1) (assoc player-1 :board (create-board (config :board-size) (player-1 :ships)))
+        (keyword PLAYER-2) (assoc player-2 :board (create-board (config :board-size) (player-2 :ships)))})
       )
 
 (defn pretty-print-player-board
