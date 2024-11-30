@@ -1,4 +1,4 @@
-(ns ui.cli.main
+(ns ui.repl.main
   (:require
     [game.init :as init]
     [game.repository.memory :as repository]
