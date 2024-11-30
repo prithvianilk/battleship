@@ -1,5 +1,6 @@
 (ns ui.repl.main
   (:require
+    [clojure.string :as str]
     [game.init :as init]
     [game.repository.memory :as repository]
     [game.play :as play]))
@@ -34,3 +35,22 @@
           (println "It's a direct hit!")
           (println "It's a miss :("))
         ))
+
+(defn describe-player's-board [game player-id]
+      (println (format "%s's board:" (init/get-player's-name game player-id))))
+
+(defn display-board [board]
+      (println (map #(str (str/join %) "\n") board)))
+
+(defn display-current-state [game-id]
+      (let [game (repository/get-by-id game-id)
+            [player-1's-board player-2's-board] (play/hide-ships-in-game game)]
+        (do
+          (describe-player's-board game init/PLAYER-1)
+          (display-board player-1's-board)
+          (println)
+          (describe-player's-board game init/PLAYER-2)
+          (display-board player-2's-board)
+          )
+        )
+      )

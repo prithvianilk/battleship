@@ -55,3 +55,16 @@
           )
         )
       )
+
+(defn hide-ships-in-row
+      [row]
+      (map #(if (= % PIECE-SHIP) PIECE-SEA %) row))
+
+(defn hide-ships-in-board [board] (map hide-ships-in-row board))
+
+(defn hide-ships-in-game
+      [game]
+      (let [player-1's-board (get-player's-board game PLAYER-1)
+            player-2's-board (get-player's-board game PLAYER-2)]
+        [(hide-ships-in-board player-1's-board) (hide-ships-in-board player-2's-board)])
+      )
